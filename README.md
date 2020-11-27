@@ -1,512 +1,773 @@
-# 介绍
 
-官方支持网站：https://www.llstack.com/ols/
 
-**OLStack 社区容器版**，是基于 Docker 容器化编排的 OpenLiteSpeed 环境。性能比Nginx更胜一筹，基本兼容 Apache HTTPD 生态，主要是不支持自动加载 .htaccss 文件，该版本对操作系统环境没有限制，未来可以应用到非常多的场景中。
+Introduction
 
-OpenLiteSpeed 是 LiteSpeed EnterPrise 的社区版本，相较 Nginx 很多扩展如 Brotli、nginx*-*cache*-*purge 等扩展，会因为更新的不及时导致对最新Stable版本的不支持，同时也没有企业级的保障。 而 OpenLiteSpeed 的组件有官方进行主要维护和更新，提供商用企业级的体验。
+ 
 
-在性能上，LiteSpeed Tech 提供的 BenchMark 中，在 WordPress、Joomla、OpenCart、ModSecurity、小型静态文件、HTTP/2、HTTP/3 的测试上都比 Apache HTTPD 和 Nginx 有这更好的表现，这不仅仅是跑个 Hello World 而是进行一个完整的测试。
+Official support website: https://www.llstack.com/ols/
 
-这是 [litespeedtech](https://github.com/litespeedtech)/**[ols-docker-env](https://github.com/litespeedtech/ols-docker-env)** 的一个复克（Fork）。
+ 
 
-# 安装环境
+OLStack Community Container Edition is an OpenLiteSpeed environment based on Docker containerized orchestration . It has better performance than Nginx and is basically compatible with the Apache HTTPD ecosystem. It mainly does not support automatic loading of .htaccss files. This version has no restrictions on the operating system environment and can be applied to many scenarios in the future.
 
-## 国内服务器准备环境
+ 
 
-一、安装 Docker 环境，已有可以跳过
+OpenLiteSpeed is the community version of LiteSpeed ​​EnterPrise . Compared with Nginx, many extensions, such as Brotli , nginx*-cache-*purge, etc., will not support the latest stable version due to untimely updates , and there is no enterprise-level guarantee. The OpenLiteSpeed components of official conduct major maintenance and updating, providing commercial enterprise-class experience.
 
-```bash
-curl -sSL https://get.daocloud.io/docker | sh   
-```
+ 
 
-二、安装 Docker-Compose 环境，其中`1.25.3`  可以根据 [**最新版本**](https://github.com/docker/compose/releases) 修改，已有可以跳过
+In performance, LiteSpeed Tech provided by BenchMark , the WordPress , Joomla , OpenCart , ModSecurity , small static files, HTTP / 2 , HTTP / 3 on the test than the Apache HTTPD and Nginx have it perform better, not just It is to run a Hello World but to conduct a complete test.
 
-```bash
-curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+ 
+
+This is a Fork of litespeedtech/ols-docker-env .
+
+Installation Environment
+
+Domestic server preparation environment
+
+ 
+
+1. Install the Docker environment, you can skip it already
+
+ 
+
+curl -sSL https://get.daocloud.io/docker | sh  
+
+ 
+
+2. Install the Docker-Compose environment, 1.25.3 can be modified according to the latest version , and can be skipped
+
+ 
+
+curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m`> /usr/local/bin/docker- compose
+
 chmod +x /usr/local/bin/docker-compose
-```
 
-三、下载 OLStack
+ 
 
-```bash
-## 没有下载 git 的可以通过 apt install git -y 或者 yum install git -y 安装
+Three, download OLStack
+
+ 
+
+## no download git can be prepared by apt install git -y or -y yum install git install
+
 git clone https://gitee.com/LLStack/OLStack.git
+
 cd OLStack
-```
 
-## 海外服务器准备环境
+ 
 
-一、安装 Docker 环境，已有可以跳过
+Overseas server preparation environment
 
-```bash
+ 
+
+1. Install the Docker environment, you can skip it already
+
+ 
+
 curl -s https://get.docker.com | sudo sh
-```
 
-二、安装 Docker-Compose 环境，其中`1.25.4`  可以根据 [**最新版本**](https://github.com/docker/compose/releases) 修改，已有可以跳过
+ 
 
-```bash
+2. Install Docker-Compose environment, 1.25.4 can be modified according to the latest version , and it can be skipped
+
+ 
+
 curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+
 chmod +x /usr/local/bin/docker-compose
-```
 
-三、下载 OLStack
+ 
 
-```bash
-## 没有下载 git 的可以通过 apt install git -y 或者 yum install git -y 安装
+Three, download OLStack
+
+ 
+
+## no download git can be prepared by apt install git -y or -y yum install git install
+
 git clone https://github.com/LLStack/OLStack.git
+
 cd OLStack
-```
 
-## 编辑配置文件
+ 
 
-四、编辑 `.env` 和 `docker-compose.yml`文件：
+Edit configuration file
 
- `.env` 文件包括了对一些版本的定义。 可以具体看 .env 说明解析。
+ 
 
-`docker-compose.yml`文件则是定义具体安装什么容器组件，包括 Redis、phpmyadmin 等。 可以具体看 docker-compose.yml 解析。
+4. Edit the .env and docker-compose.yml files:
 
-```bash
+ 
+
+The .env file contains definitions for some versions. You can see the explanation of .env for details.
+
+ 
+
+The docker-compose.yml file defines what container components are specifically installed, including Redis , phpmyadmin, etc. You can see the analysis of docker-compose.yml .
+
+ 
+
 vi .env
+
 vi docker-compose.yml
-```
 
-::: tip 提示
-不会 vi 的同学，可以用 FileZilla、XFTP 这类的支持 SFTP 协议的软件，将文件下载后编辑再上传。
-:::
+ 
 
-五、 启动容器
+::: tip Tips for students who don’t know vi , you can use FileZilla , XFTP and other software that supports SFTP to download and edit the file before uploading it. :::
 
-```bash
+ 
+
+Five, start the container
+
+ 
+
 docker-compose up -d
-```
 
-六、 启动说明：
+ 
 
-```bash
-docker-compose up ## 临时启动所有容器
-docker-compose up -d ## 持久化启动所有容器
-docker-compose stop ## 停止容器运行
-docker-compose down ## 停止和删除所有容器
-```
+6. Start-up instructions:
 
-# 配置说明
+ 
 
-## .ENV配置
+docker-compose up ## Start all containers temporarily
 
- `.env` 文件包括了对一些版本的定义，由于是 `.` 开头的文件，可能在部分电脑显示中是隐藏的，所以需要开放显示隐藏的文件。
+docker-compose up -d ## Persistently start all containers
 
-**说明如下：**
+docker-compose stop ## Stop container operation
 
-**一、时区设置**，定义所在业务的时区。默认是 `Asia/Shanghai`，例如服务的是美国东部的，则可以修改为 `America/New_York` 纽约时间。
+docker-compose down ## Stop and delete all containers
 
-```bash
+ 
+
+Configuration instructions
+
+.ENV configuration
+
+ 
+
+.env file contains definitions for some versions, because it is . beginning of the file, possibly in the portion of the computer display is hidden, it is necessary to open the Show hidden files.
+
+ 
+
+described as follows:
+
+ 
+
+1. Time zone setting, define the time zone of the business. The default is Asia/Shanghai . For example, if the service is in the eastern United States, you can modify it to America/New_York New York time.
+
+ 
+
 TimeZone=Asia/Shanghai
-```
 
-**二、OpenLiteSpeed 版本**，目前 OLS 提供了 1.6.X 和 1.5.X 两个版本，未来可能提供更多的版本。
+ 
 
-```bash
+2. OpenLiteSpeed version, currently OLS provides two versions 1.6.X and 1.5.X , and more versions may be provided in the future.
+
+ 
+
 LITESPEED=ols1.6.9
-```
 
-可供修改的选项：`ols1.6.9` 、`ols1.5.11`以及以上版本，版本查看：
+ 
+
+Options available for modification: ols1.6.9 , ols1.5.11 and above, version view:
+
+ 
 
 https://openlitespeed.org/release-log/
 
-**三、PHP版本**，由 LiteSpeed 官方提供支持的 LSPHP 版本，和很多虚拟主机使用的企业版是一样的。
+ 
 
-```bash
+Three, PHP version by LiteSpeed support the official LSPHP version, and many companies use web hosting version is the same.
+
+ 
+
 PHPVER=php73
-```
 
-目前提供了：`php74`、`php73`、`php72`、`php71`、`php70`、`php56`、`php55`、`php54`、`php53`
+ 
 
-不同的 PHP 版本底层基于的 Ubuntu 版本也不一样。
+Currently available: php74 , php73 , php72 , php71 , php70 , php56 , php55 , php54 , php53
 
-- php70～74 底层系统为 Ubuntu 18.04。
-- php54～56 底层系统为 Ubuntu 16.04。 **PHP不受官方支持**
-- php53 底层系统为 Ubuntu 14.04。 **PHP和系统均不受官方支持，仅建议测试**
+ 
 
-::: tip 提示
-PHP 每个版本的官方生命支持周期是三年，如果程序支持建议安装最新版本
-查看PHP版本支持情况：http://php.net/supported-versions.php
-:::
+Different versions of PHP are based on different versions of Ubuntu .
 
-**四、MySQLTYPE**，运行数据库的类型。
+ 
 
-```bash
+    The underlying system for php70 ~ 74 is Ubuntu 18.04 .
+
+    The underlying system of php54 ~ 56 is Ubuntu 16.04 . PHP is not officially supported
+
+    The underlying system of php53 is Ubuntu 14.04 . PHP and the system are not officially supported, only testing is recommended
+
+ 
+
+::: tip prompts that the official life support cycle of each version of PHP is three years. If the program supports it, it is recommended to install the latest version to check the PHP version support: http://php.net/supported-versions.php :::
+
+ 
+
+Fourth, MySQLTYPE , the type of running database.
+
+ 
+
 MySQLTYPE=mariadb
-```
 
-可供修改的选项：`mariadb` 、`percona`
+ 
 
-MariaDB 和 Percona 更开发并且提供更多的功能选项比默认的 MySQL 好用。
+Modifiable options: mariadb , percona
 
-**五、MySQLVER**，数据库的具体版本。
+ 
 
-```bash
+MariaDB and Percona are more developed and provide more functional options than the default MySQL .
+
+ 
+
+5. MySQLVER , the specific version of the database.
+
+ 
+
 MySQLVER=10.3
-```
 
-MariaDB 目前提供了：`10.4` 、`10.3`、 `10.2`  （兼容 MySQL5.7）  `10.1` （兼容MySQL5.6）
+ 
 
-Percona 目前提供了：`8.0` 、`5.7`、 `5.6`  （这个兼容关系，不说你也知道）
+MariaDB currently provides: 10.4 , 10.3 , 10.2 (compatible with MySQL5.7 ) 10.1 (compatible with MySQL5.6 )
 
-::: tip 提示
-由于 Docker 容器的便利性，大家如果需要 PostGreSQL、SQL Server、MongoDB、Elasticsearch 都可以直接修改 `docker-compose.yml`文件来进行实现的。
-:::
+ 
 
-**六、创建的默认数据库和用户**
+Percona currently provides: 8.0 , 5.7 , 5.6 (this compatibility relationship, not to mention you also know)
 
-```bash
-## 默认数据库名称
+ 
+
+::: tip prompted due to the Docker convenience of the container, if you need PostGreSQL , SQL Server , MongoDB , elasticsearch can be modified directly docker-compose.yml file to achieve. :::
+
+ 
+
+Six, the default database and user created
+
+ 
+
+## Default database name
+
 MYSQL_DATABASE=llstack
-## 默认数据库 root 账号密码
+
+## Default database root account password
+
 MYSQL_ROOT_PASSWORD=password
-## 默认的新建用户名
+
+## Default new username
+
 MYSQL_USER=llstack
-## 默认的新建用户密码
+
+## Default new user password
+
 MYSQL_PASSWORD=password
-```
 
-**七、REDIS_VERSION**，Redis的版本配置
+ 
 
-```bash
+Seven, REDIS_VERSION , Redis version configuration
+
+ 
+
 REDIS_VERSION=5.0-alpine
-```
 
-可供修改的选项：`6.0-rc-alpine`、`5.0-alpine`、`4.0-alpine`、`3.2-alpine`、`2.8`
+ 
 
-**八、DOMAIN**，默认配置的域名，可以保持默认，也可以输入为自己的默认域名，建议后面新建主机。
+Options available for modification: 6.0-rc-alpine , 5.0-alpine , 4.0-alpine , 3.2-alpine , 2.8
 
-```bash
+ 
+
+8. DOMAIN , the default domain name, you can keep the default or you can enter your own default domain name. It is recommended to create a new host later.
+
+ 
+
 DOMAIN=localhost
-```
 
-## docker-compose.yml 配置
+ 
 
-`docker-compose.yml` 模板文件是使用 Docker Compose 的核心，涉及到的指令关键字也比较多。
+docker-compose.yml configuration
 
-如果有需要学习的同学可以查看文档：**[Compose 模板文件](https://yeasy.gitbooks.io/docker_practice/compose/compose_file.html)**
+ 
 
-这里举例几个 OLStack 的修改方案：
+The docker-compose.yml template file is the core of using Docker Compose , and it involves more instruction keywords.
 
-**一、挂载目录**
+ 
 
-```yaml
+If you have students who need to learn, you can view the document: Compose template file
+
+ 
+
+Here are some examples of OLStack modifications:
+
+ 
+
+One, mount the directory
+
+ 
+
     volumes:
-        - ./config/lsws/conf:/usr/local/lsws/conf
-        - ./config/lsws/admin-conf:/usr/local/lsws/admin/conf
-        - ./bin/container:/usr/local/bin
-        - ./sites:/var/www/vhosts/
-        - ./acme:/root/.acme.sh/
-        - ./logs/lsws/:/usr/local/lsws/logs/
-```
 
-`:`前的是宿主机（这台服务器）的对应目录，这里使用相对路径。`:`后的是容器主机所对应的目录，如果有其他的目录挂载需求可以修改`volumes:`进行挂载。
+        -./config/lsws/conf:/usr/local/lsws/conf
 
-二、开放的端口**
+        -./config/lsws/admin-conf:/usr/local/lsws/admin/conf
 
-```yaml
+        -./bin/container:/usr/local/bin
+
+        -./sites:/var/www/vhosts/
+
+        -./acme:/root/.acme.sh/
+
+        -./logs/lsws/:/usr/local/lsws/logs/
+
+ 
+
+: The former is the corresponding directory of the host machine (this server), and the relative path is used here. After: is the directory corresponding to the container host, if there are other directory mounting requirements, you can modify volumes: to mount it.
+
+ 
+
+Two, open ports **
+
+ 
+
     ports:
-      - 80:80
-      - 443:443
-      - 443:443/udp
-      - 7080:7080
-```
 
-这里开放了三个TCP端口：80（HTTP）、443（HTTPS）和7080（OLS后台）。
+      -80:80
 
-还有一个UDP端口：443（QUIC、HTTP/3）
+      -443:443
 
-如果有更多的需求，可以新增新的端口。
+      -443:443/udp
 
-安全起见，可以将`- 7080:7080` 修改为更安全的例如：`- 27080:7080` 这样的非默认端口，减少被安全攻击的可能。
+      -7080: 7080
 
-**三、启动带#的功能**
+ 
 
-默认绿的带 `#` 的都是不启用的功能：
+There are three TCP ports open here : 80 ( HTTP ), 443 ( HTTPS ) and 7080 ( OLS backend).
 
-```yaml
-#  phpmyadmin:
-#    image: phpmyadmin/phpmyadmin:latest
-#    container_name: phpmyadmin
-#    ports:
-#      - "8081:80"
-#    environment:
-#      - PMA_HOST=mysql
-#      - PMA_PORT=3306
-#      - TZ=${TimeZone}
-```
+ 
 
-像 phpmyadmin、phpredisadmin、memcached 目前都是默认关闭的。 如果有需要需要去掉最前面的`#`，然后重新运行容器编排。
+There is also a UDP port: 443 ( QUIC , HTTP/3 )
 
-::: warning 警告
-adminer、phpmyadmin、phpredisadmin 在不使用的时候，建议关闭。
-:::
+ 
 
-# 目录结构
+If there are more needs, you can add new ports.
 
-### LiteSpeed 容器
+ 
 
-```yaml
+For security, you can modify -7080:7080 to a more secure port, such as: -27080:7080 such non-default ports to reduce the possibility of security attacks.
+
+ 
+
+3. Start the function with #
+
+ 
+
+The default green # with the function is not enabled:
+
+ 
+
+# phpmyadmin:
+
+# image: phpmyadmin/phpmyadmin:latest
+
+# container_name: phpmyadmin
+
+# ports:
+
+#-"8081:80"
+
+# environment:
+
+#-PMA_HOST=mysql
+
+#-PMA_PORT=3306
+
+#-TZ=${TimeZone}
+
+ 
+
+Like phpmyadmin , phpredisadmin , memcached are currently disabled by default. If necessary, remove the # at the top , and then re-run the container orchestration.
+
+ 
+
+::: warning Warning adminer , phpmyadmin , phpredisadmin are recommended to be closed when not in use. :::
+
+Directory Structure
+
+LiteSpeed container
+
+ 
+
     volumes:
-        - ./config/lsws/conf:/usr/local/lsws/conf  ## OLS的配置文件目录
-        - ./config/lsws/admin-conf:/usr/local/lsws/admin/conf  ## OLS的管理控制台目录
-        - ./bin/container:/usr/local/bin  ## 相关工具文件
-        - ./sites:/var/www/vhosts/  ## 虚拟主机存放的位置
-        - ./acme:/root/.acme.sh/  ## Let's Encrypt 生成的证书存放地址
-        - ./logs/lsws/:/usr/local/lsws/logs/  ##OLS 的日志地址
-```
 
-最重要的是 `- ./sites:/var/www/vhosts/` 和 `- ./logs/lsws/:/usr/local/lsws/logs/`
+        -./config/lsws/conf:/usr/local/lsws/conf ## OLS configuration file directory
 
-这里是一个相对路径，如果 OLStack 的目录在 `/home/webserver/OLStack` 那么`./sites`的实际路径就是 `/home/webserver/OLStack/OLStack`。
+        -./config/lsws/admin-conf:/usr/local/lsws/admin/conf ## OLS management console directory
 
-如果有额外数据盘的服务器，那么建议将 OLStack 目录放在数据盘下运行。
+        -./bin/container:/usr/local/bin ## Related tool files
 
-### MySQL 容器
+        -./sites:/var/www/vhosts/ ## Virtual host storage location
 
-```yaml
+        -./acme:/root/.acme.sh/ ## The storage address of the certificate generated by Let's Encrypt
+
+        -./logs/lsws/:/usr/local/lsws/logs/ ##OLS log address
+
+ 
+
+The most important thing is - ./sites:/var/www/vhosts/ and - ./logs/lsws/:/usr/local/lsws/logs/
+
+ 
+
+Here is a relative path. If the OLStack directory is in /home/webserver/OLStack, then the actual path of ./sites is /home/webserver/OLStack/OLStack .
+
+ 
+
+If there are servers with additional data disks, it is recommended to put the OLStack directory on the data disk to run.
+
+MySQL container
+
+ 
+
     volumes:
-      - "./data/mysql:/var/lib/mysql:delegated"
-```
 
-`./data/mysql`存放数据库物理文件的目录。
+      -"./data/mysql:/var/lib/mysql:delegated"
 
-有自定义修改 `my.cnf` 需求的同学，可以修改 docker-compose.yml 文件挂载对应文件。
+ 
 
-### Redis-Server 容器
+./data/mysql is the directory where the physical files of the database are stored.
 
-```yaml
+ 
+
+Students who need to customize my.cnf can modify the docker-compose.yml file to mount the corresponding file.
+
+Redis-Server container
+
+ 
+
     volumes:
-      - ./config/redis/redis.conf:/etc/redis.conf
-      - ./data/redis/data:/data
-      - ./logs/redis/:/var/log/redis/
-```
 
-`- ./config/redis/redis.conf:/etc/redis.conf` 配置文件，有中文注释
+      -./config/redis/redis.conf:/etc/redis.conf
 
-` - ./data/redis/data:/data` 持久化物理文件目录
+      -./data/redis/data:/data
 
-`- ./logs/redis/:/var/log/redis/` Redis-Server日志目录
+      -./logs/redis/:/var/log/redis/
 
-# 使用说明
+ 
 
-::: warning 提示
-使用下面的命令好，首先得进入`OLStack` 目录
-:::
+-./config/redis/redis.conf:/etc/redis.conf configuration file, with Chinese comments
 
-### 修改 LiteSpeed WebAdmin 密码
+ 
 
-```bash
+-./data/redis/data:/data persistent physical file directory
+
+ 
+
+-./logs/redis/:/var/log/redis/ Redis-Server log directory
+
+Instructions for use
+
+ 
+
+::: warning prompt to use the following command, first you have to enter the OLStack directory :::
+
+Change LiteSpeed ​​WebAdmin password
+
+ 
+
 bash bin/webadmin.sh <your_password>
-```
 
-例如我想要修改为`123456` 那么输入：
+ 
 
-```bash 
+For example, if I want to change to 123456, then enter:
+
+ 
+
 bash bin/webadmin.sh 123456
-```
 
-### 创建虚拟主机
+ 
 
-```bash
+Create virtual host
+
+ 
+
 bash bin/domain.sh -add <your_domain.com>
-```
 
-例如我想要创建域名为 `mf8.biz` 的虚拟主机那么输入，自带 `www.` 不需要重复输入：
+ 
 
-```bash
+For example, if I want to create a virtual host with a domain name of mf8.biz , then enter it, with www. No need to repeat the input:
+
+ 
+
 bash bin/domain.sh -add mf8.biz
-```
 
-### 删除虚拟主机
+ 
 
-```bash
+Delete virtual host
+
+ 
+
 domain.sh -del <your_domain.com>
-```
 
-### 创建数据库
+ 
 
-下面命令会自动生成用户名、密码和数据库名。使用以下内容自动生成：
+Create database
 
-```bash
+ 
+
+The following command will automatically generate the user name, password and database name. Automatically generated using the following:
+
+ 
+
 bash bin/database.sh -domain <your_domain.com>
-```
 
-用如下方式进行自定义用户名、密码和数据库名，替换`user_name`，`my_password`以及`database_name`为想要的值：
+ 
 
-```bash
+Use the following method to customize the user name, password and database name, replacing user_name , my_password and database_name with the desired values:
+
+ 
+
 bash bin/database.sh -domain <your_domain.com> -user user_name -password my_password -database database_name
-```
 
-### 连接数据库
+ 
 
-正常使用数据库，在站库不分离的场景下一般数据库连接地址都是填写：`127.0.0.1`或者`localhost`。
+Connect to the database
 
-在 Docker 环境中，因为数据库和执行语言是分开运行的，所以并不是在同一台“服务器”当中，自然无法使用本地连接地址。我们需要使用 `mysql` 来进行代替。
+ 
 
-# 使用说明
+Normally use the database. In the scenario where the site database is not separated, the general database connection address is filled in: 127.0.0.1 or localhost .
 
-### 配置SSL证书
+ 
 
-SSL 证书通过 ACME 申请 Let's Encrypt 免费证书实现，首次运行需要安装 ACME。
+In the Docker environment, because the database and the execution language are run separately, they are not in the same "server", so the local connection address cannot be used naturally. We need to use mysql instead.
 
-#### 安装ACME
+Instructions for use
 
-仅 **第一次** 运行需要安装ACME，带电子邮件通知运行：
+Configure SSL certificate
 
-```bash
+ 
+
+The SSL certificate is implemented by ACME applying for a Let's Encrypt free certificate, and ACME needs to be installed for the first run .
+
+Install ACME
+
+ 
+
+Only need to install ACME for the first run, run with email notification:
+
+ 
+
 ./bin/acme.sh --install -email <EMAIL_ADDR>
-```
 
-例如：
+ 
 
-```bash
+E.g:
+
+ 
+
 ./bin/acme.sh --install -email cert@mf8.biz
-```
 
-不需要电子邮件通知运行：
+ 
 
-```
+No email notification is required to run:
+
+ 
+
 ./bin/acme.sh --install --no-email
-```
 
-#### 申请证书
+ 
 
-在此命令中使用根域名，不需要填写 `www.` 会自动添加`www.`：
+Apply for a certificate
 
-```
+ 
+
+Use this command in the root domain, you do not need to fill out www. Will automatically add www. :
+
+ 
+
 ./bin/acme.sh -domain <yourdomain.com>
-```
 
-例如：
+ 
 
-```bash
+E.g:
+
+ 
+
 ./bin/acme.sh -domain mf8.biz
-```
 
-则会自动签发` www.mf8.biz` 和 `mf8.biz` 两个证书
+ 
 
-### 更新OLS版本
+Two certificates www.mf8.biz and mf8.biz will be automatically issued
 
-要将 OpenLiteSpeed 升级到最新的稳定版本，请运行
+Update OLS version
 
-```bash
+ 
+
+To upgrade OpenLiteSpeed to the latest stable version, please run
+
+ 
+
 bash bin/webadmin.sh -lsup
-```
 
-### 安装WAF防火墙
+ 
 
-使用 ModSecurity 实现防火墙WAF功能：
+Install WAF firewall
 
-Web服务器上启用WAF ：
+ 
 
-```bash
+Use ModSecurity to implement the firewall WAF function:
+
+ 
+
+Enable WAF on the web server :
+
+ 
+
 bash bin/webadmin.sh -modsec enable
-```
 
-Web服务器上禁用WAF ：
+ 
 
-```
+Disable WAF on the web server :
+
+ 
+
 bash bin/webadmin.sh -modsec disable
-```
 
-### phpMyAdmin
+ 
 
-访问地址：
+phpMyAdmin
+
+ 
+
+address:
+
+ 
 
 http://yourip:8080
 
+ 
+
 http://yourip:8443
 
-默认用户名是`root`，密码与您在`.env`文件中提供的密码相同。
+ 
 
-### 进入容器内部
+The default username is root , and the password is the same as the password you provided in the .env file.
 
-```bash
-docker exec -it litespeed /bin/sh # 进入 OpenLiteSpeed、PHP 容器
-docker exec -it mysql /bin/bash # 进入 MariaDB/Percona Server容器
-docker exec -it redis /bin/sh # 进入 Redis Server容器
-```
+Go inside the container
 
-只要定义了容器名称：container_name ，那么替换 <container_name> 为容器名称的名字即可进入。
+ 
 
-```bash
-docker exec -it <container_name> /bin/sh 
-```
+docker exec -it litespeed / bin / sh # enter OpenLiteSpeed , PHP container
 
-# 容器教程
+docker exec -it mysql / bin / bash # into the MariaDB / Percona Server container
 
-## Docker 使用教程
+docker exec -it redis / bin / sh # enter Redis Server container
 
-前面 docker run 后面 `–name litespeed` 中的 `litespeed` 为 `$name`，其代表容器识别符，也就是 `$name=litespeed`。
+ 
 
-一、定义name变量，也可以修改为 mysql、redis 等
+As long as the container name is defined: container_name , then replace <container_name> with the name of the container name to enter.
 
-```bash
+ 
+
+docker exec -it <container_name> /bin/sh
+
+ 
+
+Container tutorial
+
+Docker tutorial
+
+ 
+
+Front docker run back - name litespeed in litespeed is $ name , which represents the identifier of the container, i.e. $ name = litespeed .
+
+ 
+
+1. Define the name variable, which can also be modified to mysql , redis, etc.
+
+ 
+
 name=litespeed
-```
 
-二、查看容器在线状态及大小
+ 
 
-```bash
+2. Check the online status and size of the container
+
+ 
+
 docker ps -as
-```
 
-三、查看容器的运行输出日志
+ 
 
-```bash
+Three, view the running output log of the container
+
+ 
+
 docker logs $name
-```
 
-四、重新启动容器，一般在修改除端口外的配置后使用使修改生效
+ 
 
-```bash
+4. Restart the container, generally use it after modifying the configuration other than the port to make the modification effective
+
+ 
+
 docker restart $name
-```
 
-五、停止容器的运行
+ 
 
-```bash
+Five, stop the operation of the container
+
+ 
+
 docker stop $name
-```
 
-六、移除容器
+ 
 
-```bash
+Six, remove the container
+
+ 
+
 docker rm $name
-```
 
-七、查看 docker 容器占用 CPU，内存等信息
+ 
 
-```bash
+Seven, view the docker container occupies CPU , memory and other information
+
+ 
+
 docker stats --no-stream
-```
 
-## Docker-Compose 使用教程
+ 
 
-::: warning 提示
-首先得进入有 `docker-compose.yml` 模板文件的目录。
-:::
+Docker-Compose tutorial
 
-```bash
-docker-compose up ## 临时启动所有容器
-docker-compose up -d ## 持久化启动所有容器
-docker-compose stop ## 停止容器运行
-docker-compose down ## 停止和删除所有容器
-```
+ 
 
-如果修改过`docker-compose.yml`文件，则需要重新构建。
+::: warning prompt first have to enter there docker-compose.yml template files directory. :::
 
-```bash
+ 
+
+docker-compose up ## Start all containers temporarily
+
+docker-compose up -d ## Persistently start all containers
+
+docker-compose stop ## Stop container operation
+
+docker-compose down ## Stop and delete all containers
+
+ 
+
+If you modify the docker-compose.yml file, you need to rebuild.
+
+ 
+
 docker-compose up --build
-```
 
-# 其他链接
+ 
 
-[LLStack OLStack 社区版容器镜像](https://github.com/LLStack/OLStack-Dockerfiles)
+Other links
 
-[米饭粑](https://www.mf8.biz/)
+ 
+
+LLStack OLStack Community Edition Container Image
+
+ 
+
+Rice cake
